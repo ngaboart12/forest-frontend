@@ -69,7 +69,7 @@ const Starter = () => {
            <Header />
        </div>
        <div className="flex flex-col pt-20 gap-2">
-       <h1 className="text-[20px] py-3">Welcome! {userData.fullname}</h1>
+       <h1 className="text-[14px] py-3">Welcome! {userData.fullname}</h1>
         <div className="flex flex-row gap-6"> 
           <div className="py-3 px-2 w-[120px] flex flex-col gap-1 border-1 text-white bg-[#1A2A3C] border-black/20 rounded-md items-center">
             <h1 className="text-[22px]">{farmers.length}</h1>
