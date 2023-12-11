@@ -1,0 +1,367 @@
+import ProjectTables from "../../components/dashboard/ProjectTable";
+import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
+
+import { useEffect, useState } from "react";
+import PopupModal from "./PopupModal";
+import axios from 'axios'
+import jsPDF from "jspdf";
+import "jspdf-autotable"
+import logo from '../../assets/images/logos/rab.png'
+
+
+const DistrictTable = () => {
+  const [farmers, setFarmers] = useState([]);
+  const [openComment,setOpenComment] = useState(null)
+  const [comment, setComment] = useState('');
+  const [issues,setIssues] = useState()
+
+  useEffect(() => {
+    const fetchFarmers = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/farmers'); // Replace with your actual API endpoint
+        setFarmers(response.data.data);
+        console.log(response.data.data)
+      } catch (error) {
+        console.error('Error fetching farmers:', error);
+      }
+    };
+
+    fetchFarmers();
+  }, []);
+   
+
+  const [status,setStatus] = useState("all")
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModal2Open, setIsModal2Open] = useState(false);
+  const [selectedRowData, setSelectedRowData] = useState(null);
+  const handleRowClick = (rowData) => {
+    setSelectedRowData(rowData);
+    setIsModalOpen(true);
+ };
+ const handleApproveClick = async (farmerId) => {
+  try {
+    // Send a request to your Node.js backend to update the status
+    await axios.put(`http://localhost:4000/api/update-farmer/${farmerId}`, {
+      status: 'approved',
+    });
+
+    // Fetch updated farmers data
+    const response = await axios.get('http://localhost:4000/api/farmers');
+    setFarmers(response.data.data);
+  } catch (error) {
+    console.error('Error updating status:', error);
+  }
+};
+ const handleRejectClick = async (farmerId) => {
+  try {
+    // Send a request to your Node.js backend to update the status
+    await axios.put(`http://localhost:4000/api/update-farmer/${farmerId}`, {
+      status: 'rejected',
+      comment: comment,
+    });
+
+    // Fetch updated farmers data
+    const response = await axios.get('http://localhost:4000/api/farmers');
+    setFarmers(response.data.data);
+  } catch (error) {
+    console.error('Error updating status:', error);
+  }
+};
+const handleReportClick = async () => {
+  try {
+    const filteredData =  farmers.filter((item) => item.actions !== 'rejected' && item.actions !== 'pending')
+    const response = await axios.put('http://localhost:4000/district/report');
+   
+    const responses = await axios.get('http://localhost:4000/api/farmers');
+    setFarmers(responses.data.data);
+    console.log('Report sent successfully:', response.data);
+  } catch (error) {
+    // Handle errors (e.g., show an error message)
+    console.error('Error reporting to lab:', error);
+  }
+};
+useEffect(() => {
+  const fetchIssues = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/api/issues'); 
+      setIssues(response.data)
+      console.log(response.data)
+    } catch (error) {
+      console.error('Error fetching issues: error');
+    }
+  };
+
+  fetchIssues();
+}, []);
+
+const downloadAllDataPDF = () => {
+        
+  const doc = new jsPDF({orientation: "landscape"})
+  doc.addImage(logo, 'PNG', 10, 10, 10, 10);
+  const dateText = `Date: ${new Date().toLocaleDateString()}`;
+
+
+doc.text("Rwanda Agriculture board", 10, 30);
+doc.text(dateText, 10, 40);
+doc.text("List of all registered Farmers", 100, 50);
+
+
+ 
+
+  doc.autoTable({
+    html: "#my-table",
+    margin: {top: 60}
+  })
+  doc.save('AllFarmersData.pdf');
+};
+  return (
+    <Row>
+      <Col>
+      <div className="flex flex-row gap-6 pt-10 items-center">
+        <span className={`${status=== 'all' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("all")}>New Famer</span>
+        <span className={`${status=== 'shortlist' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("shortlist")}>Short List</span>
+        <span className={`${status=== 'reported' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("reported")}>Reported to RAB</span>
+        <span className={`${status=== 'rejected' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("rejected")}>Rejected</span>
+        <span className={`${status=== 'issues' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("issues")}>Repprted issues</span>
+ 
+       
+        
+      </div>
+      </Col>
+      <Col lg="12">
+      <Card>
+        <CardBody>
+          <CardTitle tag="h5"></CardTitle>
+          <CardTitle className="mb-2 text-muted" tag="h6">
+          
+          </CardTitle>
+          <div>
+          {status === 'shortlist' && (
+          <button onClick={handleReportClick} className=" bg-blue-500 p-2 rounded-sm text-white hover">Report to Rab</button>
+          )}
+
+          </div>
+
+          <Table className="no-wrap mt-3 align-middle" id="my-table" responsive borderless>
+            <tr>
+
+          <button onClick={downloadAllDataPDF} className=" p-2 rounded-md bg-blue-500 text-white">Export Data</button>
+            </tr>
+
+            {status === "issues" ? (
+                <>
+                {issues.map((issue)=>{
+                return(
+                  <div className="flex flex-row gap-4 items-center border-b border-black/30">
+                    <div className="h-10 w-10 bg-gray-200 rounded-md flex items-center justify-center">
+                      <h1 className=" bg-transparent">{issue.farmer.personalInfo.fullName[0].toUpperCase()}</h1>
+
+                    </div>
+                    <div className="flex flex-col border-r pr-2 border-black/20 h-full ">
+
+                    <h1 className="font-medium bg-transparent">name: <span className="font-[300]">{issue.farmer.personalInfo.fullName}</span></h1>
+                    <h1 className="font-medium bg-transparent">email: <span className="font-[300]">{issue.farmer.personalInfo.emailAddress}</span></h1>
+                    </div>
+                    <div className="flex flex-col  border-r pr-2 border-black/20">
+
+                    <h1 className="font-medium">title: <span className="font-[300]"> {issue.title}</span></h1>
+                    <h1 className="max-w-[250px] font-medium">description: <span className="font-[300]"> {issue.description}</span></h1>
+                    </div>
+                    <div className="bg-blue-500 rounded-md hover:bg-blue-600 transition-all">
+                      <button onClick={()=> setIsModalOpen(true)} className=" p-3 bg-transparent rounded-md font-[100] text-white">View data</button>
+                    </div>
+                    {isModalOpen && (  <PopupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} rowData={issue.farmer} />)}
+                  </div>
+                )
+              })}
+             
+                </>
+            ) : (
+
+            <>
+
+          
+              <tr>
+                <th>Farmer name / Email</th>
+                <th>Province</th>
+
+                <th>district</th>
+                <th>Sector</th>
+             
+               
+              </tr>
+        
+            <tbody>
+              {status === 'all' && (
+              
+
+              
+          
+              farmers.filter((item)=> item.actions === "pending").map((tdata, index) => (
+                <>
+              
+                <tr key={index}className=" cursor-pointer border-top">
+                      <td onClick={()=> handleRowClick(tdata)}>
+                    <div className="flex align-items-center p-2">
+                
+                      <div className="ms-3 flex flex-row">
+                      <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
+                        <h1>{tdata.personalInfo.fullName.slice(0,1).toUpperCase()}</h1>
+                      </div>
+                        <h6 className="mb-0">{tdata.personalInfo.fullName}</h6>
+                        
+                        <span className="text-muted">{tdata.personalInfo.emailAddress}</span>
+                      </div>
+                    </div>
+                  </td>
+                 
+                  <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.province}</td>
+                  <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.district}</td>
+                  <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.sector}</td>
+                  <td className="flex flex-row gap-3">
+                    {tdata.actions == "approved" ? (
+                      <button  className="p-2 bg-blue-500 text-white rounded-sm" >Approved</button>
+                      ) :
+                     ( <button onClick={() => handleApproveClick(tdata.farmerId)} className="p-2 bg-green-500 text-white rounded-sm" >Approve</button>)}
+                   {tdata.actions == "approved" ? ("") : ( <button onClick={()=> setOpenComment(index)} className="py-2 px-3 bg-red-500 text-white rounded-sm">Reject</button>)}
+                   
+                  </td>
+                
+                </tr>
+                {openComment == index && (
+                <tr>
+              <td> 
+          <div className="flex flex-row items-center gap-2">
+        <label htmlFor={`commentInput${index}`} className="text-sm text-gray-600">
+          Add Comment:
+        </label>
+        <textarea
+          type="text"
+          id={`commentInput${index}`}
+          className="border rounded-sm p-1"
+          placeholder="Add comment here"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          
+        />
+        <button className="p-2 border-1 border-black/40 rounded-md hover:bg-black/10" onClick={()=> handleRejectClick(tdata.farmerId)}>Confirm</button>
+        </div>
+        </td>
+                </tr>
+                )}
+                      </>
+                
+              ))
+              )}
+
+            {status == 'shortlist' && (
+            
+            farmers.filter((item)=> item.actions === "approved" ).map((tdata, index) => (
+              <>
+                 
+              <tr key={index}className=" cursor-pointer border-top">
+                    <td onClick={()=> handleRowClick(tdata)}>
+                  <div className="d-flex align-items-center p-2">
+                 
+                    <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
+                        <h1>{tdata.personalInfo.fullName.slice(0,1).toUpperCase()}</h1>
+                      </div>
+                    <div className="ms-3">
+                      <h6 className="mb-0">{tdata.personalInfo.fullName}</h6>
+                      
+                      <span className="text-muted">{tdata.personalInfo.emailAddress}</span>
+                    </div>
+                  </div>
+                </td>
+               
+                <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.province}</td>
+                <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.district}</td>
+                  <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.sector}</td>
+                <td className="flex flex-row gap-3">
+                  {tdata.actions == "approved" ? (
+                    <button onClick={()=>handleRejectClick(tdata.farmerId)} className="p-2 bg-blue-500 text-white rounded-sm" >Cancel</button>
+                  ) :
+                   ( <button onClick={() => handleApproveClick(tdata.farmerId)} className="p-2 bg-green-500 text-white rounded-sm" >Approve</button>)}
+                 {tdata.actions == "approved" ? ("") : ( <button onClick={()=> handleRejectClick(tdata.farmerId)} className="py-2 px-3 bg-red-500 text-white rounded-sm">Reject</button>)}
+                 
+                </td>
+              
+              </tr>
+            </>
+            ))
+            )}
+
+            {status === 'rejected' && (
+            
+            farmers.filter((item)=> item.actions === "rejected").map((tdata, index) => (
+              <>
+            
+              <tr key={index}className=" cursor-pointer border-top">
+                    <td onClick={()=> handleRowClick(tdata)}>
+                  <div className="d-flex align-items-center p-2">
+                  <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
+                        <h1>{tdata.personalInfo.fullName.slice(0,2).toUpperCase()}</h1>
+                      </div>
+                    <div className="ms-3">
+                    
+                      <h6 className="mb-0">{tdata.personalInfo.fullName}</h6>
+                      
+                      <span className="text-muted">{tdata.personalInfo.emailAddress}</span>
+                    </div>
+                  </div>
+                </td>
+               
+                <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.province}</td>
+                <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.district}</td>
+                  <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.sector}</td>
+              
+              
+              </tr>
+              </>
+            ))
+            )}
+            {status === 'reported' && (
+            
+            farmers.filter((item)=> item.actions === "underwayrab").map((tdata, index) => (
+              <tr key={index}className=" cursor-pointer border-top">
+                    <td onClick={()=> handleRowClick(tdata)}>
+                  <div className="d-flex align-items-center p-2">
+                 
+                    <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
+                        <h1>{tdata.personalInfo.fullName.slice(0,1).toUpperCase()}</h1>
+                      </div>
+                    <div className="ms-3">
+                      <h6 className="mb-0">{tdata.personalInfo.fullName}</h6>
+                      
+                      <span className="text-muted">{tdata.personalInfo.emailAddress}</span>
+                    </div>
+                  </div>
+                </td>
+               
+                <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.province}</td>
+                <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.district}</td>
+                  <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.sector}</td>
+             
+               
+              
+              </tr>
+            ))
+            )}
+            </tbody>
+            </>
+            )}
+          </Table>
+        </CardBody>
+      </Card>
+      {isModalOpen && (  <PopupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} rowData={selectedRowData} />)}
+    
+      </Col>
+  
+   
+ 
+ 
+    </Row>
+  );
+};
+
+export default DistrictTable;
