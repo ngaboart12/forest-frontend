@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import Input from "./Input";
 import jsonData from './data.json'
@@ -6,6 +6,7 @@ import Sidebar from "../../layouts/Sidebar";
 import Header from "../../layouts/Header";
 import axios  from "axios";
 import {ThreeDots} from "react-loader-spinner"
+import { ToastContainer, toast } from 'react-toastify';
 
 const Forms = () => {
   const [loading,setLoading] = useState(false)
@@ -199,8 +200,10 @@ const Forms = () => {
         const response = await axios.post('http://localhost:4000/api/register-farmer', formData);
         console.log(response)
         setFamerId(response.data.farmerId)
+        toast.success('Farmer register successfully')
         setLoading(false)
       } catch (error) {
+        toast.success('Farmer register failed')
         console.error(error.response.data); // handle error, maybe show an error message to the user
     }
   };

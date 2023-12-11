@@ -7,6 +7,7 @@ import axios from 'axios'
 import jsPDF from "jspdf";
 import "jspdf-autotable"
 import logo from '../../assets/images/logos/rab.png'
+import { ToastContainer, toast } from 'react-toastify'; 
 
 
 const DistrictTable = () => {
@@ -42,13 +43,16 @@ const DistrictTable = () => {
   try {
     // Send a request to your Node.js backend to update the status
     await axios.put(`http://localhost:4000/api/update-farmer/${farmerId}`, {
-      status: 'approved',
+      status: 'approved'
+      
     });
 
     // Fetch updated farmers data
+    toast.success("success approve")
     const response = await axios.get('http://localhost:4000/api/farmers');
     setFarmers(response.data.data);
   } catch (error) {
+    toast.error(error.message)
     console.error('Error updating status:', error);
   }
 };
@@ -59,11 +63,12 @@ const DistrictTable = () => {
       status: 'rejected',
       comment: comment,
     });
-
+    toast.success("success reject")
     // Fetch updated farmers data
     const response = await axios.get('http://localhost:4000/api/farmers');
     setFarmers(response.data.data);
   } catch (error) {
+    toast.error(error.message)
     console.error('Error updating status:', error);
   }
 };
@@ -71,7 +76,7 @@ const handleReportClick = async () => {
   try {
     const filteredData =  farmers.filter((item) => item.actions !== 'rejected' && item.actions !== 'pending')
     const response = await axios.put('http://localhost:4000/district/report');
-   
+    toast.success("report successfully")
     const responses = await axios.get('http://localhost:4000/api/farmers');
     setFarmers(responses.data.data);
     console.log('Report sent successfully:', response.data);

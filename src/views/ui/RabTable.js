@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import PopupModal from "./PopupModal";
 import axios from 'axios'
 import ProductionModal from "./ProductionModal";
-
+import { ToastContainer, toast } from 'react-toastify'; 
 
 const RabTable = () => {
   const [farmers, setFarmers] = useState([]);
@@ -39,15 +39,17 @@ const RabTable = () => {
       await axios.put(`http://localhost:4000/api/update-farmer/${tdata.farmerId}`, {
         status: 'allowed',
       });
+     
       await axios.post(`http://localhost:4000/api/final`, {
         farmerId:tdata._id,
         follows:selectedItems
       });
-  
+      toast.success('approve successfully')
       // Fetch updated farmers data
       const response = await axios.get('http://localhost:4000/api/farmers');
       setFarmers(response.data.data);
     } catch (error) {
+      toast.error(error.message)
       console.error('Error updating status:', error.message);
     }
   };
@@ -59,7 +61,7 @@ const RabTable = () => {
         comment: comment,
       });
   
-      // Fetch updated farmers data
+      toast.success('reject successfully')
       const response = await axios.get('http://localhost:4000/api/farmers');
       setFarmers(response.data.data);
       window.location.reload()

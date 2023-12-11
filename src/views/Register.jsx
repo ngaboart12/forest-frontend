@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { motion } from 'framer-motion'
+import { ToastContainer, toast } from 'react-toastify';
 
 const Register = () => {
   const [loading,setLoading] = useState(false)
@@ -31,6 +32,7 @@ const Register = () => {
     
             // Redirect based on user role
             const role = response.data.user.role;
+            toast.success('success login')  
             setLoading(false)
             switch (role) {
                 case 'sector-leader':

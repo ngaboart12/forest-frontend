@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import { motion } from 'framer-motion'
-
+import { ToastContainer, toast } from 'react-toastify';
 const Login = () => {
   const [loading,setLoading] = useState(false)
     const [formData, setFormData] = useState({
@@ -24,8 +24,9 @@ const Login = () => {
         try {
           const response = await axios.post('http://localhost:4000/auth/login', formData);
           localStorage.setItem('user', JSON.stringify(response.data.data.user));
-       
+           toast.success('success login')
           const role = response.data.data.user.role;
+          
           setLoading(false)
           switch (role) {
               case 'sector-leader':
