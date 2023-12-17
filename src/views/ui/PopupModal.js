@@ -12,25 +12,45 @@ const PopupModal = ({ isOpen, onClose, rowData }) => {
       <Modal isOpen={isOpen} toggle={onClose} size="lg">
          <ModalHeader toggle={onClose}>Information of {rowData.personalInfo.fullName}</ModalHeader>
          <ModalBody className="">
-           <div className="flex flex-row gap-4">
+           <div className="grid grid-cols-2 gap-4">
 
          <div className="flex flex-col">
-            <h1 className="text-[16px] ">Person Infomation</h1>
+            <h1 className="text-[16px] font-bold">Personal Infomation</h1>
             <div className="py-2 px-14 flex flex-col gap-2">
 
 
           <h1>Name: {rowData.personalInfo.fullName}</h1>
           <h1>Email: {rowData.personalInfo.emailAddress}</h1>
           <h1>Project: {rowData.personalInfo.gender}</h1>
+          <h1>ID: {rowData.personalInfo.idNumber}</h1>
+          <h1>Education level: {rowData.personalInfo.idNumber}</h1>
+          <h1>status: {rowData.personalInfo.status}</h1>
             </div>
          </div>
          <div className="flex flex-col">
-            <h1 className="text-[16px] ">plan Infomation</h1>
+            <h1 className="text-[16px] font-bold">Person Address </h1>
             <div className="py-2 px-14 flex flex-col gap-2">
 
 
+          <h1>Province: {rowData.addressDetails.province}</h1>
+          <h1>District: {rowData.addressDetails.district}</h1>
+          <h1>Sector: {rowData.addressDetails.sector}</h1>
+          <h1>Cell: {rowData.addressDetails.cell}</h1>
+          <h1>Village: {rowData.addressDetails.village}</h1>
+        
+            </div>
+         </div>
+         <div className="flex flex-col">
+            <h1 className="text-[16px] font-bold">plan Infomation</h1>
+            <div className="py-2 px-14 flex flex-col gap-2">
+
+
+          <h1>Activity Name: {rowData.farmerActivities.activityName}</h1>
           <h1>forest type: {rowData.farmerActivities.forestType}</h1>
           <h1>cropType: {rowData.farmerActivities.cropType}</h1>
+          <h1>Farmer Ability: {rowData.farmerActivities.farmerAbility}</h1>
+          <h1>Support Type: {rowData.farmerActivities.supportType}</h1>
+          <h1>Work Status: {rowData.farmerActivities.workStatus}</h1>
          
             </div>
          </div>
