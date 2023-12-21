@@ -100,6 +100,18 @@ useEffect(() => {
 }, []);
 
 const downloadAllDataPDF = () => {
+  let title = "";
+  if (status === 'approved') {
+    title += " List Of Approved Farmers";
+  } else if (status === 'rejected') {
+    title += " List Of Rejected Farmers";
+  } else if (status === 'reported') {
+    title += " List Of Reported Farmers";
+  } else if (status === 'issues') {
+    title += " - Reported Issues";
+  } else if (status === 'allowed') {
+    title += " List Of Allowed Farmers";
+  }
         
   const doc = new jsPDF({orientation: "landscape"})
   doc.addImage(logo, 'PNG', 10, 10, 10, 10);
@@ -108,7 +120,7 @@ const downloadAllDataPDF = () => {
 
 doc.text("Rwanda Agriculture board", 10, 30);
 doc.text(dateText, 10, 40);
-doc.text("List of all registered Farmers", 100, 50);
+doc.text(title, 100, 50);
 
 
  
@@ -122,10 +134,11 @@ doc.text("List of all registered Farmers", 100, 50);
   return (
     <Row>
       <Col>
-      <div className="flex flex-row gap-6 pt-10 items-center">
+      <div className="flex flex-row  pt-10 items-center">
         <span className={`${status=== 'all' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("all")}>New Famer</span>
         <span className={`${status=== 'shortlist' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("shortlist")}>Short List</span>
         <span className={`${status=== 'reported' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("reported")}>Reported to RAB</span>
+        <span className={`${status=== 'allowed' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("allowed")}>Allowed</span>
         <span className={`${status=== 'rejected' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("rejected")}>Rejected</span>
         <span className={`${status=== 'issues' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("issues")}>Repprted issues</span>
  
@@ -187,7 +200,8 @@ doc.text("List of all registered Farmers", 100, 50);
 
           
               <tr>
-                <th>Farmer name / Email</th>
+                <th>Farmer name</th>
+                <th>Email</th>
                 <th>Province</th>
 
                 <th>district</th>
@@ -210,14 +224,17 @@ doc.text("List of all registered Farmers", 100, 50);
                     <div className="flex align-items-center p-2">
                 
                       <div className="ms-3 flex flex-row">
-                      <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
+                      {/* <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
                         <h1>{tdata.personalInfo.fullName.slice(0,1).toUpperCase()}</h1>
-                      </div>
+                      </div> */}
                         <h6 className="mb-0">{tdata.personalInfo.fullName}</h6>
                         
-                        <span className="text-muted">{tdata.personalInfo.emailAddress}</span>
+                       
                       </div>
                     </div>
+                  </td>
+                  <td>
+                  <span className="text-muted">{tdata.personalInfo.emailAddress}</span>
                   </td>
                  
                   <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.province}</td>
@@ -268,16 +285,17 @@ doc.text("List of all registered Farmers", 100, 50);
                     <td onClick={()=> handleRowClick(tdata)}>
                   <div className="d-flex align-items-center p-2">
                  
-                    <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
+                    {/* <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
                         <h1>{tdata.personalInfo.fullName.slice(0,1).toUpperCase()}</h1>
-                      </div>
+                      </div> */}
                     <div className="ms-3">
                       <h6 className="mb-0">{tdata.personalInfo.fullName}</h6>
                       
-                      <span className="text-muted">{tdata.personalInfo.emailAddress}</span>
+                     
                     </div>
                   </div>
                 </td>
+                <td> <span className="text-muted">{tdata.personalInfo.emailAddress}</span></td>
                
                 <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.province}</td>
                 <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.district}</td>
@@ -296,6 +314,36 @@ doc.text("List of all registered Farmers", 100, 50);
             ))
             )}
 
+            {status === 'allowed' && (
+            
+            farmers.filter((item)=> item.actions === "allowed").map((tdata, index) => (
+              <>
+            
+              <tr key={index}className=" cursor-pointer border-top">
+                    <td onClick={()=> handleRowClick(tdata)}>
+                  <div className="d-flex align-items-center p-2">
+                  {/* <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
+                        <h1>{tdata.personalInfo.fullName.slice(0,2).toUpperCase()}</h1>
+                      </div> */}
+                    <div className="ms-3">
+                    
+                      <h6 className="mb-0">{tdata.personalInfo.fullName}</h6>
+                      
+                     
+                    </div>
+                  </div>
+                </td>
+                <td> <span className="text-muted">{tdata.personalInfo.emailAddress}</span></td>
+               
+                <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.province}</td>
+                <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.district}</td>
+                  <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.sector}</td>
+              
+              
+              </tr>
+              </>
+            ))
+            )}
             {status === 'rejected' && (
             
             farmers.filter((item)=> item.actions === "rejected").map((tdata, index) => (
@@ -304,16 +352,19 @@ doc.text("List of all registered Farmers", 100, 50);
               <tr key={index}className=" cursor-pointer border-top">
                     <td onClick={()=> handleRowClick(tdata)}>
                   <div className="d-flex align-items-center p-2">
-                  <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
+                  {/* <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
                         <h1>{tdata.personalInfo.fullName.slice(0,2).toUpperCase()}</h1>
-                      </div>
+                      </div> */}
                     <div className="ms-3">
                     
                       <h6 className="mb-0">{tdata.personalInfo.fullName}</h6>
                       
-                      <span className="text-muted">{tdata.personalInfo.emailAddress}</span>
+                     
                     </div>
                   </div>
+                </td>
+                <td>
+                <span className="text-muted">{tdata.personalInfo.emailAddress}</span>
                 </td>
                
                 <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.province}</td>
@@ -332,16 +383,17 @@ doc.text("List of all registered Farmers", 100, 50);
                     <td onClick={()=> handleRowClick(tdata)}>
                   <div className="d-flex align-items-center p-2">
                  
-                    <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
+                    {/* <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
                         <h1>{tdata.personalInfo.fullName.slice(0,1).toUpperCase()}</h1>
-                      </div>
+                      </div> */}
                     <div className="ms-3">
                       <h6 className="mb-0">{tdata.personalInfo.fullName}</h6>
                       
-                      <span className="text-muted">{tdata.personalInfo.emailAddress}</span>
+                   
                     </div>
                   </div>
                 </td>
+                <td>   <span className="text-muted">{tdata.personalInfo.emailAddress}</span></td>
                
                 <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.province}</td>
                 <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.district}</td>

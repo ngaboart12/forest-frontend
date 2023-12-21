@@ -29,6 +29,17 @@ const SortTable = (props) => {
     const status = props.status
     const farmers = props.farmers
     const downloadAllDataPDF = () => {
+      let title = "";
+      if (status === 'all') {
+ 
+        title += " List Of All Farmers";
+      }else if(status === 'allowed'){
+        title += " List Of Allowed Farmers";
+
+      }else if(status === 'rejected'){
+        title += " List Of Rejected Farmers";
+
+      }
         
       const doc = new jsPDF({orientation: "landscape"})
       doc.addImage(logo, 'PNG', 10, 10, 10, 10);
@@ -37,7 +48,7 @@ const SortTable = (props) => {
     
   doc.text("Rwanda Agriculture board", 10, 30);
   doc.text(dateText, 10, 40);
-  doc.text("List of all registered Farmers", 100, 50);
+  doc.text(title, 100, 50);
 
 
      
@@ -101,7 +112,8 @@ const SortTable = (props) => {
               <Table className=" mt-3 align-middle" responsive borderless id="my-table">
             <thead>
               <tr>
-                <th>Farmer Name / email</th>
+                <th>Farmer Name</th>
+                <th>Email</th>
                 <th>province</th>
 
                 <th>destrict</th>
@@ -114,16 +126,19 @@ const SortTable = (props) => {
                 <tr key={index} className="border-top">
                   <td>
                     <div className="d-flex align-items-center p-2">
-                      <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
+                      {/* <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
                         <h1>{tdata.personalInfo.fullName.slice(0,1).toUpperCase()}</h1>
-                      </div>
+                      </div> */}
                 
                       <div className="ms-3">
                         <h6 className="mb-0">{tdata.personalInfo.fullName}</h6>
                         
-                        <span className="text-muted">{tdata.personalInfo.emailAddress}</span>
+                      
                       </div>
                     </div>
+                  </td>
+                  <td>
+                  <span className="text-muted">{tdata.personalInfo.emailAddress}</span>
                   </td>
                  
                   <td> {tdata.addressDetails.province}</td>

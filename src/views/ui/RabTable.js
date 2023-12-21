@@ -5,6 +5,11 @@ import PopupModal from "./PopupModal";
 import axios from 'axios'
 import ProductionModal from "./ProductionModal";
 import { ToastContainer, toast } from 'react-toastify'; 
+import jsPDF from "jspdf";
+import "jspdf-autotable"
+import logo from '../../assets/images/logos/rab.png'
+
+
 
 const RabTable = () => {
   const [farmers, setFarmers] = useState([]);
@@ -111,7 +116,38 @@ const handleCheckboxChange = (item) => {
   }
 };
 
+const downloadAllDataPDF = () => {
+  let title = "";
+  if (status === 'approved') {
+    title += " List Of Approved Farmers";
+  } else if (status === 'rejected') {
+    title += " List Of Rejected Farmers";
+  } else if (status === 'reported') {
+    title += " List Of Reported Farmers";
+  } else if (status === 'issues') {
+    title += " - Reported Issues";
+  } else if (status === 'allowed') {
+    title += " List Of Allowed Farmers";
+  }
+        
+  const doc = new jsPDF({orientation: "landscape"})
+  doc.addImage(logo, 'PNG', 10, 10, 10, 10);
+  const dateText = `Date: ${new Date().toLocaleDateString()}`;
 
+
+doc.text("Rwanda Agriculture board", 10, 30);
+doc.text(dateText, 10, 40);
+doc.text(title, 100, 50);
+
+
+ 
+
+  doc.autoTable({
+    html: "#my-table",
+    margin: {top: 60}
+  })
+  doc.save('AllFarmersData.pdf');
+};
 
   return (
     <Row className="w-full">
@@ -119,6 +155,7 @@ const handleCheckboxChange = (item) => {
       <div className="flex flex-row gap-6 pt-4 items-center py-3">
         <span className={`${status=== 'all' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("all")}>New Famer</span>
         <span className={`${status=== 'allowed' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("allowed")}>allowed</span>
+        <span className={`${status=== 'rejected' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("rejected")}>Rejected</span>
         <span className={`${status=== 'issues' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("issues")}>Reported Issues</span>
 
  
@@ -134,7 +171,10 @@ const handleCheckboxChange = (item) => {
            
           </CardTitle>
 
-          <Table className="no-wrap mt-3 align-middle" responsive borderless>
+          <Table className="no-wrap mt-3 align-middle" id="my-table" responsive borderless>
+            <tr>
+              <td>  <button onClick={downloadAllDataPDF} className=" p-2 rounded-md bg-blue-500 text-white">Export Data</button></td>
+            </tr>
 
           {status === "issues" ? (
                 <>
@@ -173,18 +213,19 @@ const handleCheckboxChange = (item) => {
             <>
            
                 
-            <thead>
+           
               <tr>
-              <th>Farmer name / Email</th>
+              <th>Farmer name</th>
+              <th>Email</th>
                 <th>Province</th>
 
                 <th>district</th>
                 <th>Sector</th>
-                <th>status</th>
+                
                
               </tr>
-            </thead>
-            <tbody>
+           
+         
               {status === 'all' && (
 
                 
@@ -201,10 +242,11 @@ const handleCheckboxChange = (item) => {
       
             <h6 className="mb-0">{tdata.personalInfo.fullName}</h6>
             
-            <span className="text-muted">{tdata.personalInfo.emailAddress}</span>
+           
           </div>
         </div>
       </td>
+      <td> <span className="text-muted">{tdata.personalInfo.emailAddress}</span></td>
     
       <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.province}</td>
       <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.district}</td>
@@ -289,10 +331,48 @@ const handleCheckboxChange = (item) => {
                     <div className="ms-3">
                       <h6 className="mb-0">{tdata.personalInfo.fullName}</h6>
                       
-                      <span className="text-muted">{tdata.personalInfo.emailAddress}</span>
+                     
                     </div>
                   </div>
                 </td>
+                <td> <span className="text-muted">{tdata.personalInfo.emailAddress}</span></td>
+               
+                <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.province}</td>
+                <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.district}</td>
+                <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.sector}</td>
+                <td className="flex flex-row gap-3">
+                  {tdata.actions == "allowed" ? (
+                    <button onClick={()=> handelViewClieck(tdata)}  className="p-2 bg-blue-500 text-white rounded-sm" >View production</button>
+                  ) :
+                   ( <button onClick={() => handleApproveClick(tdata.farmerId)} className="p-2 bg-green-500 text-white rounded-sm" >Approve</button>)}
+                
+                 
+                </td>
+              
+              </tr>
+            </>
+            ))
+            )}
+{status == 'rejected' && (
+            
+            farmers.filter((item)=> item.actions == "rejected" ).map((tdata, index) => (
+              <>
+               
+              <tr key={index}className=" cursor-pointer border-top">
+                    <td onClick={()=> handleRowClick(tdata)}>
+                  <div className="d-flex align-items-center p-2">
+                  <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
+                        <h1>{tdata.personalInfo.fullName.slice(0,1).toUpperCase()}</h1>
+                      </div>
+              
+                    <div className="ms-3">
+                      <h6 className="mb-0">{tdata.personalInfo.fullName}</h6>
+                      
+                    
+                    </div>
+                  </div>
+                </td>
+                <td>  <span className="text-muted">{tdata.personalInfo.emailAddress}</span></td>
                
                 <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.province}</td>
                 <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.district}</td>
@@ -312,7 +392,7 @@ const handleCheckboxChange = (item) => {
             )}
             
 
-            </tbody>
+           
             </>)}
 
           </Table>
