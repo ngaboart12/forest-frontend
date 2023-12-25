@@ -99,9 +99,16 @@ useEffect(() => {
   fetchIssues();
 }, []);
 
+const userData = JSON.parse(localStorage.getItem("user"));
+const userDistrict = userData?.district;
+
+
 const downloadAllDataPDF = () => {
   let title = "";
-  if (status === 'approved') {
+  if(status == "all"){
+    title += "list of all Farmers"
+  }
+  else if (status === 'approved') {
     title += " List Of Approved Farmers";
   } else if (status === 'rejected') {
     title += " List Of Rejected Farmers";
@@ -117,9 +124,10 @@ const downloadAllDataPDF = () => {
   doc.addImage(logo, 'PNG', 10, 10, 10, 10);
   const dateText = `Date: ${new Date().toLocaleDateString()}`;
 
-
+doc.setFontSize(12);
 doc.text("Rwanda Agriculture board", 10, 30);
-doc.text(dateText, 10, 40);
+doc.text(dateText, 10, 35);
+doc.text(`District: ${userDistrict}`, 10, 40);
 doc.text(title, 100, 50);
 
 
@@ -131,6 +139,12 @@ doc.text(title, 100, 50);
   })
   doc.save('AllFarmersData.pdf');
 };
+
+const doneFarmers = farmers.filter(
+  (tdata) =>
+    tdata.addressDetails.district === userDistrict
+);
+
   return (
     <Row>
       <Col>
@@ -210,13 +224,13 @@ doc.text(title, 100, 50);
                
               </tr>
         
-            <tbody>
+           
               {status === 'all' && (
               
 
               
           
-              farmers.filter((item)=> item.actions === "pending").map((tdata, index) => (
+              doneFarmers.filter((item)=> item.actions === "pending").map((tdata, index) => (
                 <>
               
                 <tr key={index}className=" cursor-pointer border-top">
@@ -278,7 +292,7 @@ doc.text(title, 100, 50);
 
             {status == 'shortlist' && (
             
-            farmers.filter((item)=> item.actions === "approved" ).map((tdata, index) => (
+            doneFarmers.filter((item)=> item.actions === "approved" ).map((tdata, index) => (
               <>
                  
               <tr key={index}className=" cursor-pointer border-top">
@@ -316,7 +330,7 @@ doc.text(title, 100, 50);
 
             {status === 'allowed' && (
             
-            farmers.filter((item)=> item.actions === "allowed").map((tdata, index) => (
+            doneFarmers.filter((item)=> item.actions === "allowed").map((tdata, index) => (
               <>
             
               <tr key={index}className=" cursor-pointer border-top">
@@ -346,7 +360,7 @@ doc.text(title, 100, 50);
             )}
             {status === 'rejected' && (
             
-            farmers.filter((item)=> item.actions === "rejected").map((tdata, index) => (
+            doneFarmers.filter((item)=> item.actions === "rejected").map((tdata, index) => (
               <>
             
               <tr key={index}className=" cursor-pointer border-top">
@@ -378,7 +392,7 @@ doc.text(title, 100, 50);
             )}
             {status === 'reported' && (
             
-            farmers.filter((item)=> item.actions === "underwayrab").map((tdata, index) => (
+            doneFarmers.filter((item)=> item.actions === "underwayrab").map((tdata, index) => (
               <tr key={index}className=" cursor-pointer border-top">
                     <td onClick={()=> handleRowClick(tdata)}>
                   <div className="d-flex align-items-center p-2">
@@ -404,7 +418,7 @@ doc.text(title, 100, 50);
               </tr>
             ))
             )}
-            </tbody>
+          
             </>
             )}
           </Table>

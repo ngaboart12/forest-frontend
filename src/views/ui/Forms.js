@@ -270,17 +270,17 @@ const Forms = () => {
           <h1 className="text-[20px]">Farmer Location Address</h1>
         <div className="grid gap-y-4 gap-x-4 md:gap-y-10 grid-cols-1 sm:gird-cols-2 md:grid-cols-3 py-4">
 
-          <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1">
 
-      <label>Province:</label>
-      <select className="border border-black/50 py-3 px-4 rounded-md" value={selectedProvince} onChange={handleProvinceChange}>
-        <option value="">Select Province</option>
-        {Object.keys(jsonData).map((province) => (
-          <option key={province} value={province}>
-            {province}
-          </option>
-        ))}
-      </select>
+        <label>Province:</label>
+        <select className="border border-black/50 py-3 px-4 rounded-md" value={selectedProvince} onChange={handleProvinceChange}>
+          <option value="">Select Province</option>
+          {Object.keys(jsonData).map((province) => (
+            <option key={province} value={province}>
+              {province}
+            </option>
+          ))}
+        </select>
         </div>
       
 

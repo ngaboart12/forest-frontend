@@ -20,7 +20,7 @@ const Header = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const [isLoggedIn, setLoggedIn] = useState(true);
-
+  
   const handleLogout = () => {
     // Remove the "user" item from localStorage
     localStorage.removeItem("user");
@@ -80,8 +80,7 @@ const Header = () => {
 
       <Collapse navbar isOpen={isOpen}>
         <Nav className="me-auto flex flex-row items-center gap-4" navbar>
-            <h1 className="text-[24px]">{userData.role === "sector-leader" && ('Sector Dashboard')}
-            {userData.role === "district-leader" && ('District Dashboard')} {userData.role === "rab-leader" && ('RAB Dashboard')}</h1>
+            <h1 className="text-[16px]"> Dashboard</h1>
             <h1>Date:</h1>
             <div className="p-1 fle border-1 border-gray-300 rounded-md ">
 

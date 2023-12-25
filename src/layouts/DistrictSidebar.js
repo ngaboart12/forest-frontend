@@ -25,7 +25,7 @@ const DistrictSidebar = () => {
   let location = useLocation();
 
   return (
-    <div className="p-3 ">
+    <div className="p-3 h-[100vh] bg-white">
       <div className="d-flex align-items-center">
         <h1>RWANDA FOREST AGRICULUTER</h1>
         <span className="ms-auto d-lg-none">

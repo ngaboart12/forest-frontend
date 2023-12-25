@@ -171,16 +171,16 @@ doc.text(title, 100, 50);
            
           </CardTitle>
 
-          <Table className="no-wrap mt-3 align-middle" id="my-table" responsive borderless>
+          <Table className=" mt-3 align-middle" id="my-table" responsive borderless>
             <tr>
               <td>  <button onClick={downloadAllDataPDF} className=" p-2 rounded-md bg-blue-500 text-white">Export Data</button></td>
             </tr>
 
           {status === "issues" ? (
                 <>
-                {issues.map((issue)=>{
+                {issues.map((issue,index)=>{
                 return(
-                  <div className="flex flex-row gap-4 items-center border-b border-black/30">
+                  <div key={index} className="flex flex-row gap-4 items-center border-b border-black/30">
                     <div className="h-10 w-10 bg-gray-200 rounded-md flex items-center justify-center">
                       <h1 className=" bg-transparent">{issue.farmer.personalInfo.fullName[0].toUpperCase()}</h1>
 
@@ -232,7 +232,7 @@ doc.text(title, 100, 50);
             
   farmers.filter((item)=> item.actions === "underwayrab").map((tdata, index) => (
     <>
-    <tr key={index}className=" cursor-pointer border-top">
+    <tr key={index} className=" cursor-pointer border-top">
           <td onClick={()=> handleRowClick(tdata)}>
         <div className="d-flex align-items-center p-2">
         <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
@@ -255,8 +255,8 @@ doc.text(title, 100, 50);
         {tdata.actions == "approved" ? (
           <button  className="p-2 bg-blue-500 text-white rounded-sm" >Approved</button>
           ) :
-        ( <button onClick={()=> handleAprrove(index)} className="p-2 bg-green-500 text-white rounded-sm" >Approve</button>)}
-      {tdata.actions == "approved" ? ("") : ( <button onClick={()=> handleReject(index)} className="py-2 px-3 bg-red-500 text-white rounded-sm">Reject</button>)}
+        ( <button onClick={()=> handleAprrove(index)} className="p-2  text-white rounded-sm" style={{backgroundColor:'darkgreen', color:'white',borderRadius:'4px'}}>Approve</button>)}
+      {tdata.actions == "approved" ? ("") : ( <button onClick={()=> handleReject(index)} style={{backgroundColor:'darkred', color:'white',borderRadius:'4px'}}>Reject</button>)}
       
       </td>
     
@@ -342,7 +342,7 @@ doc.text(title, 100, 50);
                 <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.sector}</td>
                 <td className="flex flex-row gap-3">
                   {tdata.actions == "allowed" ? (
-                    <button onClick={()=> handelViewClieck(tdata)}  className="p-2 bg-blue-500 text-white rounded-sm" >View production</button>
+                    <button onClick={()=> handelViewClieck(tdata)}  className="p-2 bg-blue-500 text-whites rounded-sm" style={{backgroundColor:'#0496C7', color:'white',borderRadius:'4px'}}>View production</button>
                   ) :
                    ( <button onClick={() => handleApproveClick(tdata.farmerId)} className="p-2 bg-green-500 text-white rounded-sm" >Approve</button>)}
                 
@@ -381,7 +381,7 @@ doc.text(title, 100, 50);
                   {tdata.actions == "allowed" ? (
                     <button onClick={()=> handelViewClieck(tdata)}  className="p-2 bg-blue-500 text-white rounded-sm" >View production</button>
                   ) :
-                   ( <button onClick={() => handleApproveClick(tdata.farmerId)} className="p-2 bg-green-500 text-white rounded-sm" >Approve</button>)}
+                   ( <button onClick={() => handleApproveClick(tdata.farmerId)} className="p-2 bg-green-500 rounded-sm" style={{backgroundColor:'darkgreen', color:'white',borderRadius:'4px'}} >Approve</button>)}
                 
                  
                 </td>

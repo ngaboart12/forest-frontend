@@ -37,6 +37,23 @@ const District = () => {
   
       fetchFarmers();
     }, []);
+    const userDistrict = userData?.district;
+    const doneFarmer = farmers.filter(
+      (tdata) =>
+        tdata.addressDetails.district === userDistrict
+    );
+    const donePending = pendingFarmer.filter(
+      (tdata) =>
+        tdata.addressDetails.district === userDistrict
+    );
+    const doneAllowed = allowedFarmer.filter(
+      (tdata) =>
+        tdata.addressDetails.district === userDistrict
+    );
+    const doneReject = rejectedFarmer.filter(
+      (tdata) =>
+        tdata.addressDetails.district === userDistrict
+    );
     
 
     useEffect(() => {
@@ -76,19 +93,19 @@ const District = () => {
        <h1 className="text-[14px] pb-4">Welcome  {userData.fullname}</h1>
        <div className="flex flex-row gap-6"> 
           <div className="py-3 px-2 w-[120px] flex flex-col gap-1 border-1 text-white bg-[#1A2A3C] border-black/20 rounded-md items-center">
-            <h1 className="text-[22px]">{farmers.length}</h1>
+            <h1 className="text-[22px]">{doneFarmer.length}</h1>
             <span className="text-orange-400 text-[16px]">All Farmers</span>
           </div>
           <div className="py-3 px-2 w-[120px]  flex flex-col gap-1 border-1 text-white bg-[#1A2A3C] border-black/20 rounded-md items-center">
-            <h1 className="text-[22px]">{pendingFarmer.length}</h1>
+            <h1 className="text-[22px]">{donePending.length}</h1>
             <span className="text-[16px] text-orange-400">Pending</span>
           </div>
           <div className="py-3 px-2 w-[120px]  flex flex-col gap-1 border-1 text-white bg-[#1A2A3C] border-black/20 rounded-md items-center">
-            <h1 className="text-[22px]">{allowedFarmer.length}</h1>
+            <h1 className="text-[22px]">{doneAllowed.length}</h1>
             <span className="text-[16px] text-orange-400">Allowed</span>
           </div>
           <div className="py-3 px-2 w-[120px]  flex flex-col gap-1 border-1 text-white bg-[#1A2A3C] border-black/20 rounded-md items-center">
-            <h1 className="text-[22px]">{rejectedFarmer.length}</h1>
+            <h1 className="text-[22px]">{doneReject.length}</h1>
             <span className="text-[16px] text-orange-400">Rejected</span>
           </div>
       

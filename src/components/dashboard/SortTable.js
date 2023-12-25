@@ -25,14 +25,17 @@ const SortTable = (props) => {
 
     fetchIssues();
   }, []);
-
+  const userData = JSON.parse(localStorage.getItem("user"));
+  const userDistrict = userData?.district;
+  const userSector = userData?.sector;
+  
     const status = props.status
     const farmers = props.farmers
     const downloadAllDataPDF = () => {
       let title = "";
       if (status === 'all') {
  
-        title += " List Of All Farmers";
+        title += ` List Of All Farmers in` ;
       }else if(status === 'allowed'){
         title += " List Of Allowed Farmers";
 
@@ -45,24 +48,32 @@ const SortTable = (props) => {
       doc.addImage(logo, 'PNG', 10, 10, 10, 10);
       const dateText = `Date: ${new Date().toLocaleDateString()}`;
  
-    
+  doc.setFontSize(12);
   doc.text("Rwanda Agriculture board", 10, 30);
-  doc.text(dateText, 10, 40);
-  doc.text(title, 100, 50);
+  doc.text(dateText, 10, 35);
+  doc.text(`District: ${userDistrict}`, 10, 40);
+  doc.text(`Sector: ${userSector}`, 10, 45);
+
+  doc.text(title, 100, 55);
 
 
      
     
       doc.autoTable({
         html: "#my-table",
-        margin: {top: 60}
+        margin: {top: 65}
       })
       doc.save('AllFarmersData.pdf');
     };
 
 
-    
-    const doneProjects = status === 'all' ? farmers : farmers.filter((tdata) => tdata.actions === status);
+const doneProjects = (status === 'all' ? farmers : farmers.filter((tdata) => tdata.actions === status))
+  .filter(
+    (tdata) =>
+      tdata.addressDetails.district === userDistrict &&
+      tdata.addressDetails.sector === userSector
+  );
+ 
   return (
     <div>
       <Card>
