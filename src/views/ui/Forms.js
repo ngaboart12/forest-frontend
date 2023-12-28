@@ -9,11 +9,12 @@ import {ThreeDots} from "react-loader-spinner"
 import { ToastContainer, toast } from 'react-toastify';
 
 const Forms = () => {
+  const userData = JSON.parse(localStorage.getItem('user'))
   const [loading,setLoading] = useState(false)
   const [farmerId,setFamerId] = useState(null)
-  const [selectedProvince, setSelectedProvince] = useState('');
-  const [selectedDistrict, setSelectedDistrict] = useState('');
-  const [selectedSector, setSelectedSector] = useState('');
+  const [selectedProvince, setSelectedProvince] = useState(userData.province || '');
+  const [selectedDistrict, setSelectedDistrict] = useState(userData.district || '');
+  const [selectedSector, setSelectedSector] = useState(userData.sector || '');
   const [selectedCell, setSelectedCell] = useState('');
   const [selectedVillage, setSelectedVillage] = useState('');
 
@@ -154,9 +155,9 @@ const Forms = () => {
       status: '',
     },
     addressDetails: {
-      province: '',
-      district: '',
-      sector: '',
+      province: userData.province || '',
+      district: userData.district || '',
+      sector: userData.sector || '',
       cell: '',
       village: '',
     },

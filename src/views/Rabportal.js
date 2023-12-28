@@ -16,6 +16,7 @@ const Rabportal = () => {
   const [allowedFarmer, setAllowedFarmer] = useState([]);
   const [rejectedFarmer, setRejectedFarmer] = useState([]);
   const [pendingFarmer, setPendingFarmer] = useState([]);
+  
 
   
   useEffect(() => {
@@ -25,6 +26,7 @@ const Rabportal = () => {
         const pendingFarmers = response.data.data.filter(farmer => farmer.actions === 'pending' || farmer.actions === 'approved' || farmer.actions === 'underwayrab');
         const allowedFarmers = response.data.data.filter(farmer => farmer.actions === 'allowed');
         const rejectedFarmers = response.data.data.filter(farmer => farmer.actions === 'rejected');
+        const allFarmers = response.data.data.filter(farmer => farmer.actions === 'underwayrab');
         setRejectedFarmer(rejectedFarmers)
         setAllowedFarmer(allowedFarmers)
         setPendingFarmer(pendingFarmers)

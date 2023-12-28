@@ -13,6 +13,7 @@ const Register = () => {
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
+    province: "",
     district: "",
     sector: "",
     role: "", // default value
@@ -72,7 +73,15 @@ const Register = () => {
   };
 
   const handleProvinceChange = (event) => {
-    setSelectedProvince(event.target.value);
+    const selectedProvinceValue = event.target.value;
+
+    // Reset lower-level dropdown when district changes
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      province: selectedProvinceValue,
+    }));
+
+    setSelectedProvince(selectedProvinceValue);
 
     // Reset other dropdowns when province changes
   };

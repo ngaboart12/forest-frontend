@@ -196,7 +196,7 @@ const doneFarmers = farmers.filter(
         <span className={`${status=== 'reported' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("reported")}>Reported to RAB</span>
         <span className={`${status=== 'allowed' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("allowed")}>Allowed</span>
         <span className={`${status=== 'rejected' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("rejected")}>Rejected</span>
-        <span className={`${status=== 'issues' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("issues")}>Repprted issues</span>
+        <span className={`${status=== 'issues' ? "text-white  bg-black  " :'text-black'} flex justify-center items-center rounded-md cursor-pointer hover:opacity-60 h-10 px-8`} onClick={()=> setStatus("issues")}>Reported issues</span>
  
        
         
@@ -362,7 +362,7 @@ const doneFarmers = farmers.filter(
                   <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.sector}</td>
                 <td className="flex flex-row gap-3">
                   {tdata.actions == "approved" ? (
-                    <button onClick={()=>handleRejectClick(tdata.farmerId)} className="p-2 bg-blue-500 text-white rounded-sm" >Cancel</button>
+                    <button onClick={()=>handleRejectClick(tdata.farmerId)} className="p-2 bg-blue-500 text-white rounded-sm" style={{backgroundColor:'red'}}>Reject</button>
                   ) :
                    ( <button onClick={() => handleApproveClick(tdata.farmerId)} className="p-2 bg-green-500 text-white rounded-sm" style={{backgroundColor:'#4C9A2A'}}>Approve</button>)}
                  {tdata.actions == "approved" ? ("") : ( <button onClick={()=> handleRejectClick(tdata.farmerId)} className="py-2 px-3 bg-red-500 text-white rounded-sm" style={{backgroundColor:'#DE0A26'}}>Reject</button>)}

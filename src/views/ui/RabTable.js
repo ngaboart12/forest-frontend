@@ -32,6 +32,7 @@ const RabTable = () => {
 
     fetchFarmers();
   }, []);
+ 
 
   const handelViewClieck = (tdata)=>{
     setSelectedRowData(tdata)

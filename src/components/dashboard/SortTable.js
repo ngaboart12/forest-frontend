@@ -163,25 +163,21 @@ const doneProjects = (status === 'all' ? farmers : farmers.filter((tdata) => tda
               <Table className=" mt-3 align-middle" responsive borderless id="my-table">
             <thead>
               <tr>
-                <th>image</th>
+              
                 <th>Farmer Name</th>
                 <th>Email</th>
                 <th>province</th>
 
                 <th>destrict</th>
                 <th>sector</th>
-                <th className=" hidden">Date</th>
-                <th>Status</th>
+               
+              
               </tr>
             </thead>
             <tbody>
               {doneProjects.map((tdata, index) => (
                 <tr key={index} className="border-top">
-                  <td>
-                  <a href={tdata.idCopy.url} target="_blank" rel="noopener noreferrer" download>
-    Download ID Copy
-  </a>
-                  </td>
+            
                   <td>
                     <div className="d-flex align-items-center p-2">
                       {/* <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">

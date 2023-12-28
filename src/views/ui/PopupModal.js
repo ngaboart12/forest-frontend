@@ -28,7 +28,7 @@ const PopupModal = ({ isOpen, onClose, rowData }) => {
             </div>
          </div>
          <div className="flex flex-col">
-            <h1 className="text-[16px] font-bold">Person Address </h1>
+            <h1 className="text-[16px] font-bold">Personal Address </h1>
             <div className="py-2 px-14 flex flex-col gap-2">
 
 
@@ -53,6 +53,19 @@ const PopupModal = ({ isOpen, onClose, rowData }) => {
           <h1>Work Status: {rowData.farmerActivities.workStatus}</h1>
          
             </div>
+         </div>
+         <div className="flex flex-col gap-2">
+            <h1 className="font-bold">Files</h1>
+            <div className="flex flex-col gap-2 px-14">
+
+            <a href={rowData.idCopy.url} target="_blank" rel="noopener noreferrer" className="text-blue-500" download>
+                View ID 
+               </a>
+            <a href={rowData.landCertificate.url} target="_blank" rel="noopener noreferrer" className="text-blue-500" download>
+                View Land Certificate 
+             </a>
+            </div>
+
          </div>
            </div>
             {/* Add more details as needed */}
