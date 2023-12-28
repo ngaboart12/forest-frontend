@@ -56,14 +56,53 @@ const SortTable = (props) => {
 
   doc.text(title, 100, 55);
 
+  const headers = [
+    "Farmer Name",
+    "Email",
+    "Province",
+    "District",
+    "Sector",
+    
+    "Date",
+    "time",
+    "Status",
+    
+  ];
+
+  // Add a row for each data entry
+  const data = doneProjects.map(tdata => [
+    tdata.personalInfo.fullName,
+    tdata.personalInfo.emailAddress,
+    tdata.addressDetails.province,
+    tdata.addressDetails.district,
+    tdata.addressDetails.sector,
+    new Date(tdata.createdAt).toLocaleDateString(),
+    new Date(tdata.createdAt).toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    }),
+    tdata.actions === "pending" || tdata.actions === "approved" || tdata.actions === "underwayrab"
+      ? "Pending"
+      : tdata.actions === "rejected"
+        ? "Rejected"
+        : "Allowed"
+  ]);
+
+  // Add the header and data to the PDF
+  doc.autoTable({
+  
+       
+    margin: {top: 65},
+    head: [headers],
+    body: data,
+    margin: { top: 65 }
+  });
+
 
      
-    
-      doc.autoTable({
-        html: "#my-table",
-        margin: {top: 65}
-      })
-      doc.save('AllFarmersData.pdf');
+ 
+      doc.save(`${userData.sector} - FARMERS.pdf`);
     };
 
 
@@ -73,6 +112,7 @@ const doneProjects = (status === 'all' ? farmers : farmers.filter((tdata) => tda
       tdata.addressDetails.district === userDistrict &&
       tdata.addressDetails.sector === userSector
   );
+  console.log(issues)
  
   return (
     <div>
@@ -91,7 +131,7 @@ const doneProjects = (status === 'all' ? farmers : farmers.filter((tdata) => tda
                 return(
                   <div className="flex flex-row gap-4 items-center border-b border-black/30">
                     <div className="h-10 w-10 bg-gray-200 rounded-md flex items-center justify-center">
-                      <h1 className=" bg-transparent">{issue.farmer.personalInfo.fullName[0].toUpperCase()}</h1>
+                      <h1 className=" bg-transparent">{issue.farmer.personalInfo.fullName}</h1>
 
                     </div>
                     <div className="flex flex-col border-r pr-2 border-black/20 h-full ">
@@ -123,18 +163,25 @@ const doneProjects = (status === 'all' ? farmers : farmers.filter((tdata) => tda
               <Table className=" mt-3 align-middle" responsive borderless id="my-table">
             <thead>
               <tr>
+                <th>image</th>
                 <th>Farmer Name</th>
                 <th>Email</th>
                 <th>province</th>
 
                 <th>destrict</th>
                 <th>sector</th>
+                <th className=" hidden">Date</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {doneProjects.map((tdata, index) => (
                 <tr key={index} className="border-top">
+                  <td>
+                  <a href={tdata.idCopy.url} target="_blank" rel="noopener noreferrer" download>
+    Download ID Copy
+  </a>
+                  </td>
                   <td>
                     <div className="d-flex align-items-center p-2">
                       {/* <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center">
@@ -155,6 +202,11 @@ const doneProjects = (status === 'all' ? farmers : farmers.filter((tdata) => tda
                   <td> {tdata.addressDetails.province}</td>
                   <td>{tdata.addressDetails.district}</td>
                   <td>{tdata.addressDetails.sector}</td>
+                  <td className=" hidden">{new Date(tdata.createdAt).toLocaleTimeString('en-US', {
+  hour: 'numeric',
+  minute: 'numeric',
+  hour12: true
+})}</td>
                   <td>
                     {tdata.actions === "pending" || tdata.actions === "approved" || tdata.actions === "underwayrab"  ?  (
                       <div className="text-orange-500 w-[110px] border-1 px-4 py-2 rounded-md border-orange-500">pending</div>

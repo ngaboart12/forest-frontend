@@ -102,6 +102,12 @@ useEffect(() => {
 const userData = JSON.parse(localStorage.getItem("user"));
 const userDistrict = userData?.district;
 
+const doneProjects = (status === 'all' ? farmers : farmers.filter((tdata) => tdata.actions === status))
+  .filter(
+    (tdata) =>
+      tdata.addressDetails.district === userDistrict
+  );
+
 
 const downloadAllDataPDF = () => {
   let title = "";
@@ -131,13 +137,49 @@ doc.text(`District: ${userDistrict}`, 10, 40);
 doc.text(title, 100, 50);
 
 
- 
+const headers = [
+  "Farmer Name",
+  "Email",
+  "Province",
+  "District",
+  "Sector",
+  
+  "Date",
+  "time",
+  "Status",
+  
+];
 
-  doc.autoTable({
-    html: "#my-table",
-    margin: {top: 60}
-  })
-  doc.save('AllFarmersData.pdf');
+// Add a row for each data entry
+const data = doneProjects.map(tdata => [
+  tdata.personalInfo.fullName,
+  tdata.personalInfo.emailAddress,
+  tdata.addressDetails.province,
+  tdata.addressDetails.district,
+  tdata.addressDetails.sector,
+  new Date(tdata.createdAt).toLocaleDateString(),
+  new Date(tdata.createdAt).toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  }),
+  tdata.actions === "pending" || tdata.actions === "approved" || tdata.actions === "underwayrab"
+    ? "Pending"
+    : tdata.actions === "rejected"
+      ? "Rejected"
+      : "Allowed"
+]);
+
+// Add the header and data to the PDF
+doc.autoTable({
+
+     
+  margin: {top: 65},
+  head: [headers],
+  body: data,
+  margin: { top: 65 }
+});
+  doc.save(`${userData.district} -FARMERS.pdf`);
 };
 
 const doneFarmers = farmers.filter(
@@ -197,10 +239,10 @@ const doneFarmers = farmers.filter(
                     <div className="flex flex-col  border-r pr-2 border-black/20">
 
                     <h1 className="font-medium">title: <span className="font-[300]"> {issue.title}</span></h1>
-                    <h1 className="max-w-[250px] font-medium">description: <span className="font-[300]"> {issue.description}</span></h1>
+                    <h1 className="max-w-[450px] font-medium">description: <span className="font-[300]"> {issue.description}</span></h1>
                     </div>
                     <div className="bg-blue-500 rounded-md hover:bg-blue-600 transition-all">
-                      <button onClick={()=> setIsModalOpen(true)} className=" p-3 bg-transparent rounded-md font-[100] text-white">View data</button>
+                      <button onClick={()=> setIsModalOpen(true)} className=" p-3 bg-transparent rounded-md font-[100] text-white uppercase">Portfolio</button>
                     </div>
                     {isModalOpen && (  <PopupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} rowData={issue.farmer} />)}
                   </div>
@@ -220,6 +262,10 @@ const doneFarmers = farmers.filter(
 
                 <th>district</th>
                 <th>Sector</th>
+                {status=== "all" && (
+
+                <th colSpan={2}>operation</th>
+                )}
              
                
               </tr>
@@ -256,10 +302,10 @@ const doneFarmers = farmers.filter(
                   <td onClick={()=> handleRowClick(tdata)}> {tdata.addressDetails.sector}</td>
                   <td className="flex flex-row gap-3">
                     {tdata.actions == "approved" ? (
-                      <button  className="p-2 bg-blue-500 text-white rounded-sm" >Approved</button>
+                      <button  className="p-2 bg-blue-500 text-white rounded-sm" style={{backgroundColor:'#4C9A2A'}}>Approved</button>
                       ) :
-                     ( <button onClick={() => handleApproveClick(tdata.farmerId)} className="p-2 bg-green-500 text-white rounded-sm" >Approve</button>)}
-                   {tdata.actions == "approved" ? ("") : ( <button onClick={()=> setOpenComment(index)} className="py-2 px-3 bg-red-500 text-white rounded-sm">Reject</button>)}
+                     ( <button onClick={() => handleApproveClick(tdata.farmerId)} className="p-2 bg-green-500 text-white rounded-sm" style={{backgroundColor:'#4C9A2A'}}>Approve</button>)}
+                   {tdata.actions == "approved" ? ("") : ( <button onClick={()=> setOpenComment(index)} className="py-2 px-3 bg-red-500 text-white rounded-sm" style={{backgroundColor:'#DE0A26'}}>Reject</button>)}
                    
                   </td>
                 
@@ -318,8 +364,8 @@ const doneFarmers = farmers.filter(
                   {tdata.actions == "approved" ? (
                     <button onClick={()=>handleRejectClick(tdata.farmerId)} className="p-2 bg-blue-500 text-white rounded-sm" >Cancel</button>
                   ) :
-                   ( <button onClick={() => handleApproveClick(tdata.farmerId)} className="p-2 bg-green-500 text-white rounded-sm" >Approve</button>)}
-                 {tdata.actions == "approved" ? ("") : ( <button onClick={()=> handleRejectClick(tdata.farmerId)} className="py-2 px-3 bg-red-500 text-white rounded-sm">Reject</button>)}
+                   ( <button onClick={() => handleApproveClick(tdata.farmerId)} className="p-2 bg-green-500 text-white rounded-sm" style={{backgroundColor:'#4C9A2A'}}>Approve</button>)}
+                 {tdata.actions == "approved" ? ("") : ( <button onClick={()=> handleRejectClick(tdata.farmerId)} className="py-2 px-3 bg-red-500 text-white rounded-sm" style={{backgroundColor:'#DE0A26'}}>Reject</button>)}
                  
                 </td>
               

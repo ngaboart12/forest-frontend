@@ -81,16 +81,15 @@ const Rulessec = () => {
          <Header />
      </div>
      <div className='py-20 flex flex-col gap-4'>
-        <h1 className='text-[20px] text-center'>Digital Agroforestry Compliance Checklist for RAB Approval</h1>
-      
-            <span className='text-center px-4'>We are thrilled to present a comprehensive checklist designed to ensure that all farmers meet the requirements
+     <h1 className='text-[20px] text-center font-bold'>Digital Agroforestry Compliance <br/> Checklist for RAB Approval</h1>
+            <span className='text-center px-4 text-black/40'>We are thrilled to present a comprehensive checklist designed to ensure that all farmers meet the requirements
                  for Digital Agroforestry, seeking approval from the Rwanda Agriculture Board (RAB). This checklist encapsulates key parameters essential
                  for evaluating the readiness of farmers in adopting digital technologies for agroforestry practices. Please find below the detailed checklist:
             </span>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
             {rules.map((item,index)=>{
                 return(
-                    <div key={index} className='flex flex-col gap-2 bg-gray-400/10 rounded-md p-2'>
+                    <div key={index} className='flex flex-col gap-2 bg-gray-100 shadow-md rounded-md p-2'>
                     <h1 className='text-[14px] font-medium'>{item.header}</h1>
                     <div className='flex flex-col gap-1'>
                         {item.list.map((item,index)=>{

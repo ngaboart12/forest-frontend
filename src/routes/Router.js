@@ -8,6 +8,9 @@ import Register from "../views/Register.jsx";
 import Rulesdis from "../layouts/Rulesdis.js";
 import Rulessec from "../layouts/Rulessec.js";
 import Rulesrab from "../layouts/Rulesrab.js";
+import { exact } from "prop-types";
+import Home from "../views/Home.jsx";
+import Transporter from "../layouts/Transporter.js";
 
 
 const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
@@ -34,7 +37,9 @@ const ThemeRoutes = [
     path: "/",
     element: <FullLayout />,
     children: [
-      { path: "/", element: <Navigate to="/starter" /> },
+      { path: "/", exact: true, element:<Home/> },
+      { path: "/transporter", exact: true, element:<Transporter/> },
+      { path: "/starter", exact: true, element:<Starter/> },
       { path: "/rulesdis", exact: true, element: <Rulesdis /> },
       { path: "/rulessec", exact: true, element: <Rulessec /> },
       { path: "/rulesrab", exact: true, element: <Rulesrab /> },

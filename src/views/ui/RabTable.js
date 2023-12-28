@@ -115,10 +115,15 @@ const handleCheckboxChange = (item) => {
     setSelectedItems([...selectedItems, item]);
   }
 };
+const doneProjects = farmers.filter((data)=>  data.actions === status)
 
 const downloadAllDataPDF = () => {
   let title = "";
-  if (status === 'approved') {
+  if(status === "all"){
+    title += "List of All Farmer"
+
+  }
+  else if (status === 'approved') {
     title += " List Of Approved Farmers";
   } else if (status === 'rejected') {
     title += " List Of Rejected Farmers";
@@ -140,13 +145,50 @@ doc.text(dateText, 10, 40);
 doc.text(title, 100, 50);
 
 
- 
+const headers = [
+  "Farmer Name",
+  "Email",
+  "Province",
+  "District",
+  "Sector",
+  
+  "Date",
+  "time",
+  "Status",
+  
+];
 
-  doc.autoTable({
-    html: "#my-table",
-    margin: {top: 60}
-  })
-  doc.save('AllFarmersData.pdf');
+// Add a row for each data entry
+const data = doneProjects.map(tdata => [
+  tdata.personalInfo.fullName,
+  tdata.personalInfo.emailAddress,
+  tdata.addressDetails.province,
+  tdata.addressDetails.district,
+  tdata.addressDetails.sector,
+  new Date(tdata.createdAt).toLocaleDateString(),
+  new Date(tdata.createdAt).toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  }),
+  tdata.actions === "pending" || tdata.actions === "approved" || tdata.actions === "underwayrab"
+    ? "Pending"
+    : tdata.actions === "rejected"
+      ? "Rejected"
+      : "Allowed"
+]);
+
+// Add the header and data to the PDF
+doc.autoTable({
+
+     
+  margin: {top: 65},
+  head: [headers],
+  body: data,
+  margin: { top: 65 }
+});
+
+  doc.save('RAB-FARMERS.pdf');
 };
 
   return (
@@ -172,9 +214,9 @@ doc.text(title, 100, 50);
           </CardTitle>
 
           <Table className=" mt-3 align-middle" id="my-table" responsive borderless>
-            <tr>
+           
               <td>  <button onClick={downloadAllDataPDF} className=" p-2 rounded-md bg-blue-500 text-white">Export Data</button></td>
-            </tr>
+            
 
           {status === "issues" ? (
                 <>
@@ -190,7 +232,7 @@ doc.text(title, 100, 50);
                     <h1 className="font-medium bg-transparent">name: <span className="font-[300]">{issue.farmer.personalInfo.fullName}</span></h1>
                     <h1 className="font-medium bg-transparent">email: <span className="font-[300]">{issue.farmer.personalInfo.emailAddress}</span></h1>
                     </div>
-                    <div className="flex flex-col  border-r pr-2 border-black/20 w-[250px]">
+                    <div className="flex flex-col  border-r pr-2 border-black/20 w-[350px]">
 
                     <h1 className="font-medium">title: <span className="font-[300]"> {issue.title}</span></h1>
                     <h1 className="font-medium">description: <span className="font-[300]"> {issue.description}</span></h1>

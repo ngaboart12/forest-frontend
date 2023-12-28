@@ -21,6 +21,10 @@ const Forms = () => {
   const [activitySelectedDistrict, setActivitySelectedDistrict] = useState('');
   const [activitySelectedSector, setActivitySelectedSector] = useState('');
 
+  const [idCopy,setIdCopy] = useState(null)
+  const [landCertificate,setLandCertificate] = useState(null)
+ 
+
 
 
   
@@ -147,7 +151,7 @@ const Forms = () => {
       idNumber: '',
       emailAddress: '',
       educationLevel: '',
-      status: ''
+      status: '',
     },
     addressDetails: {
       province: '',
@@ -164,7 +168,7 @@ const Forms = () => {
       activityName: '',
       cropType: '',
       farmerAbility: '',
-      supportType: '',
+      // supportType: '',
       workStatus: '',
       
     },
@@ -195,15 +199,21 @@ const Forms = () => {
     setLoading(true)
     // Handle form submission logic here
     e.preventDefault();
+   
+    const FormDatas = new FormData()
+    FormDatas.append('formData', JSON.stringify(formData));
+    FormDatas.append('idCopy', idCopy)
+    FormDatas.append('landCertificate', landCertificate)
     
     try {
-        const response = await axios.post('http://localhost:4000/api/register-farmer', formData);
+        const response = await axios.post('http://localhost:4000/api/register-farmer', FormDatas);
         console.log(response)
         setFamerId(response.data.farmerId)
         toast.success('Farmer register successfully')
         setLoading(false)
       } catch (error) {
-        toast.success('Farmer register failed')
+        toast.error('Farmer register failed')
+        setLoading(false)
         console.error(error.response.data); // handle error, maybe show an error message to the user
     }
   };
@@ -214,11 +224,19 @@ const Forms = () => {
       case 1:
         return (
           <>
-            <h1 className="text-[20px] pb-4">Person Info</h1>
+            <h1 className="text-[20px] pb-4">Personal Info</h1>
+          
             <div className="gap-x-2 gap-y-4 md:gap-y-10 grid grid-cols-1  sm:grid-cols-2 md:grid-cols-3">
+          
               <Input placeholder="full name" label="Full Name" type="text"  value={formData.personalInfo.fullName} onChange={(e)=>handleInputChange('personalInfo', 'fullName', e.target.value)}/>
               <Input placeholder="Email" label="Email" type="email" value={formData.personalInfo.emailAddress} onChange={(e)=>handleInputChange('personalInfo', 'emailAddress', e.target.value)}/>
               <Input placeholder="Id Number" label="Id Number" type="number" value={formData.personalInfo.idNumber} onChange={(e)=>handleInputChange('personalInfo', 'idNumber', e.target.value)}/>
+              <div className="flex flex-col  gap-1 text-black">
+            <span>ID FILE</span>
+
+              <input type="file" name="idCopy" onChange={(e)=> setIdCopy(e.target.files[0])}   className="border py-3 rounded-md px-4 outline-none text-[#07294D]" />
+              </div>
+            
               <Input placeholder="Phone Number" label="Phone Number" type="number" value={formData.personalInfo.contactNumber} onChange={(e)=>handleInputChange('personalInfo', 'contactNumber', e.target.value)}/>
               <div className="flex flex-col  gap-1 text-black">
             <span>Gender</span>
@@ -256,7 +274,18 @@ const Forms = () => {
   
 
   </div>
-              <Input placeholder="Status" label="Satus" type="text" value={formData.personalInfo.status} onChange={(e)=>handleInputChange('personalInfo', 'status', e.target.value)}/>
+  <div className="flex flex-col gap-1">
+    <label>Status</label>
+    <select value={formData.personalInfo.status} onChange={(e)=>handleInputChange('personalInfo', 'status', e.target.value)} className="border border-black/50 py-3 px-4 rounded-md">
+      <option value="">Please select</option>
+      <option value="single">Single</option>
+      <option value="married">Married</option>
+      <option value="divorced">Divorce</option>
+    </select>
+  
+
+  </div>
+              {/* <Input placeholder="Status" label="Status" type="text" value={formData.personalInfo.status} onChange={(e)=>handleInputChange('personalInfo', 'status', e.target.value)}/> */}
            
         
             </div>
@@ -402,12 +431,28 @@ const Forms = () => {
           </select>
         </div>
       )}
+        <div className="flex flex-col gap-1">
+    <label>Forest Type</label>
+    <select value={formData.farmerActivities.forestType} onChange={(e)=>handleInputChange('farmerActivities', 'forestType', e.target.value)}className="border border-black/50 py-3 px-4 rounded-md">
+      <option value="">Please select</option>
+      <option value="savannah">Savannah</option>
+      <option value="bamboos">Bamboos</option>
+      <option value="Degraded natural forests">Degraded natural forests</option>
+      <option value="Plantation of pinus">Plantation of Pinus</option>
+    </select>
+   
+  
 
-      <Input placeholder="Forest type" label="Forest Type" type="text" value={formData.farmerActivities.forestType} onChange={(e)=>handleInputChange('farmerActivities', 'forestType', e.target.value)} />
+  </div>
+  <div className="flex flex-col  gap-1 text-black">
+    <span>Land Certificate</span>
+    <input type="file"name="landCertificate" onChange={(e)=> setLandCertificate(e.target.files[0])}  className="border py-3 rounded-md px-4 outline-none text-[#07294D]" />
+    </div>
+      {/* <Input placeholder="Forest type" label="Forest Type" type="text" value={formData.farmerActivities.forestType} onChange={(e)=>handleInputChange('farmerActivities', 'forestType', e.target.value)} /> */}
       <Input placeholder="Activity Name" label="Activity Name" type="text" value={formData.farmerActivities.activityName} onChange={(e)=>handleInputChange('farmerActivities', 'activityName', e.target.value)} />
       <Input placeholder="Type of crop to cultivate" label="Crop type" type="text" value={formData.farmerActivities.cropType} onChange={(e)=>handleInputChange('farmerActivities', 'cropType', e.target.value)}/>
       <Input placeholder="Farmer Ability" label="Farmer Abilty" type="text" value={formData.farmerActivities.farmerAbility} onChange={(e)=>handleInputChange('farmerActivities', 'farmerAbility', e.target.value)}/>
-      <Input placeholder="Support type" label="support type" type="text" value={formData.farmerActivities.supportType} onChange={(e)=>handleInputChange('farmerActivities', 'supportType', e.target.value)}/>
+      {/* <Input placeholder="Support type" label="support type" type="text" value={formData.farmerActivities.supportType} onChange={(e)=>handleInputChange('farmerActivities', 'supportType', e.target.value)}/> */}
       <div className="flex flex-col gap-1">
     <label>Work Status</label>
     <select onChange={(e)=>handleInputChange('farmerActivities', 'workStatus',  e.target.value)} className="border border-black/50 py-3 px-4 rounded-md">

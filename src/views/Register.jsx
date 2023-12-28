@@ -109,8 +109,8 @@ const Register = () => {
         transition={{ duration: 1 }}
         className="md:w-1/2 py-8 w-full bg-blue-500 md:ml-[-40px] flex flex-col justify-center items-center gap-4 px-10 lg:px-20"
       >
-        <h1 className="text-[40px] font-bold text-white text-center leading-8">
-          Rwanda Forest <br /> Agriculture
+        <h1 className="text-[40px] font-bold text-white text-center leading-10 uppercase">
+          AgroForestry management system
         </h1>
         <p className="text-center text-[14px] text-gray-300 leading-4">
           Feel free to adapt this form based on your specific requirements and
@@ -186,7 +186,7 @@ const Register = () => {
               <option value="">please select</option>
               <option value="sector-leader">sector leader</option>
               <option value="district-leader">District leader</option>
-              <option value="rab-leader">Rab</option>
+              <option value="rab-leader">RAB</option>
             </select>
           </div>
 

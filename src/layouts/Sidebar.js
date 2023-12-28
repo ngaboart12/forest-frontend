@@ -34,7 +34,7 @@ const Sidebar = () => {
   return (
     <div className="p-3 ">
       <div className="d-flex align-items-center">
-        <h1>RWANDA FOREST AGRICULUTER</h1>
+        <h1 className="text-center">AGROFORESTRY <br/> MANAGEMENT SYSTEM</h1>
         <span className="ms-auto d-lg-none">
         <Button
           close
