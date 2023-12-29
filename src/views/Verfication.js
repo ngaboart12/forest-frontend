@@ -35,32 +35,46 @@ const Verfication = () => {
       }
     
   return (
-    <div  className='flex flex-col justify-center items-center w-full h-screen gap-y-4'>
-      <div className='flex flex-col gap-4 w-full md:w-1/2 py-4 rounded-md items-center'>
-      <h1 className='text-[32px]'>Farmer Infomation</h1>
+    <div  className='flex flex-col  items-center w-full h-screen gap-y-4 px-10 '>
+      <div className='flex flex-col gap-4 w-full  rounded-md items-center'>
+        <div className="p-3 w-full bg-white flex flex-row items-center">
+          <h1 className='text-[16px] font-light'>AGROFORESTRY MANAGEMENT SYSTEM</h1>
+        </div>
+        <div className='flex flex-row items-center gap-10 p-3 bg-white w-full'>
+          <div className='flex flex-row gap-2 items-center'>
 
-      <table className='w-full'>
-        <tr className='h-10 border-b border-black/30'>
-          <th>name</th>
-          <th>Email</th>
-          <th>Phone number</th>
-          <th>status</th>
-        </tr> 
-        <tr className=''>
-          <td>{farmerData.personalInfo.fullName}</td>
-          <td>{farmerData.personalInfo.emailAddress}</td>
-          <td>{farmerData.personalInfo.contactNumber}</td>
-          <td>{farmerData.actions === "pending" ? (<span className='text-orange-400'>undeway sector</span>) :""}{ farmerData.actions === "approved" ? (<span className='text-orange-400'>undeway district</span>) :""}
-           {farmerData.actions === "underwayrab" ? (<span className='text-orange-400'>undeway rab</span>) :""} {farmerData.actions === "rejected" ? (<span className='text-red-400'> rejected</span>) :""} {farmerData.actions === "allowed" ? (<span className='text-green-500'>Allowed</span>) :""}</td>
-        </tr>
-        </table> 
-         {farmerData.actions == "rejected" && (
+          <div className='bg-gray-200/40 rounded-full w-14 h-14 items-center shadow-md flex justify-center'>
+            {farmerData.personalInfo.fullName.slice(0,2).toUpperCase()}
+          </div>
+          <div className='flex flex-col'>
+             <span className='text-black/50'>Full name</span>
+            <span className='font-light text-[14px]'>{farmerData.personalInfo.fullName}</span>
+          </div>
+          </div>
+          <div className='flex flex-col'>
+             <span className='text-black/50'>Email</span>
+            <span className='font-light text-[14px]'>{farmerData.personalInfo.emailAddress}</span>
+          </div>
+          <div className='flex flex-col'>
+             <span className='text-black/50'>Phone Number</span>
+            <span className='font-light text-[14px]'>{farmerData.personalInfo.contactNumber}</span>
+          </div>
+          <div className='flex flex-col'>
+             <span className='text-black/50'>Status</span>
+             {farmerData.actions === "pending" ? (<span className='text-orange-400'>Underway Sector</span>) :""}{ farmerData.actions === "approved" ? (<span className='text-orange-400'>Underway district</span>) :""}
+           {farmerData.actions === "underwayrab" ? (<span className='text-orange-400'>Underway RAB</span>) :""} {farmerData.actions === "rejected" ? (<span className='text-red-400'> rejected</span>) :""} {farmerData.actions === "allowed" ? (<span className='text-green-500'>Allowed</span>) :""}
+          </div>
+        </div>
+        <div className='flex flex-col w-full bg-white p-2'>
+          
+        {farmerData.actions == "rejected" && (
           <>
+          <div className='flex flex-row pb-3'>
+            <h1 className='text-[16px] font-[700] uppercase'>Why You Are Not Allowed</h1>
+          </div>
           <div className='flex flex-row gap-4 w-full justify-between'>
 
-            <div className='flex flex-col   '>
-
-            <span className='font-[700]'>comment</span>
+            <div className='flex flex-col'>
             <span>{farmerData.comment}</span>
             </div>
              <span className='p-2'><button onClick={()=> setIsModalOpen(true)} className='py-3 px-10 bg-orange-400 rounded-md text-white'>Claim</button></span>
@@ -68,12 +82,18 @@ const Verfication = () => {
        
           </>
          )}
-         {farmerData.actions === "allowed" && (
+           {farmerData.actions === "allowed" && (
           <div className='flex flex-row gap-3'>
-          <button onClick={handleWhyClick}  className='text-center p-2 mt-2 border-1 border-blue-500 rounded-sm text-blue-500 hover:scale-110 transition-all'>Why you Selected</button>
+          <button onClick={handleWhyClick}  className='text-center p-2 mt-2 border-1 border-blue-500 rounded-sm text-blue-500 hover:scale-110 transition-all'>Why you were Selected</button>
           <button onClick={handleContinueClick}  className='text-center p-2 mt-2 bg-blue-500 rounded-sm text-white hover:scale-110 transition-all'>add production</button>
           </div>
          )}
+        </div>
+      
+
+      
+        
+       
               
       </div>
       <div className='flex flex-row gap-2 items-center'>

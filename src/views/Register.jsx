@@ -155,7 +155,7 @@ const Register = () => {
               value={formData.fullname}
               onChange={handleChange}
               type="text"
-              className="bg-gray-200 outline-none border-black/30 p-3 "
+              className="border rounded-md outline-none border-black/80 p-3  "
             />
           </div>
           <div className="flex flex-col w-full gap-1">
@@ -167,7 +167,7 @@ const Register = () => {
               value={formData.email}
               onChange={handleChange}
               type="email"
-              className="bg-gray-200 outline-none border-black/30 p-3 "
+              className="border rounded-md outline-none border-black/80 p-3  "
             />
           </div>
           <div className="flex flex-col w-full gap-1" onChange={handleChange}>
@@ -180,7 +180,7 @@ const Register = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="bg-gray-200 outline-none border-black/30 p-3 "
+              className="border rounded-md outline-none border-black/80 p-3  "
             />
           </div>
           <div className="flex flex-col w-full gap-1">
@@ -190,7 +190,7 @@ const Register = () => {
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="bg-gray-200 outline-none border-black/30 p-3 "
+              className="border rounded-md outline-none border-black/80 p-3  "
             >
               <option value="">please select</option>
               <option value="sector-leader">sector leader</option>

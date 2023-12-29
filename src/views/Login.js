@@ -48,6 +48,8 @@ const Login = () => {
           }; 
           
         } catch (error) {
+          toast.error('Invalid Email or Password')
+          setLoading(false)
           console.error(error.message);
         }
       };
@@ -76,7 +78,7 @@ const Login = () => {
 
             <div className='flex flex-col w-full gap-1'>
                 <h1>Your email address</h1>
-                <input placeholder='Username' className='bg-gray-200 outline-none border-black/30 p-3 '  
+                <input placeholder='Username' className='border rounded-md outline-none border-black/80 p-3 '  
                 name="email"
                 value={formData.email}
                 onChange={handleChange}  />
@@ -84,8 +86,9 @@ const Login = () => {
             </div>
             <div className='flex flex-col w-full gap-1'>
                 <h1>Password</h1>
-                <input placeholder='Password' className='bg-gray-200 outline-none border-black/30 p-3'
+                <input placeholder='Password' className='border rounded-md outline-none border-black/80 p-3 '
                 name="password"
+                type='password'
                 value={formData.password}
                 onChange={handleChange}/>
                 

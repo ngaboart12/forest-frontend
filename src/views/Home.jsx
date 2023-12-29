@@ -101,7 +101,7 @@ const Home = () => {
             <a href="/usersign" className="hover:opacity-80">
               Farmer
             </a>
-            <a href="/starter" className="hover:opacity-80">
+            <a href="/transporter" className="hover:opacity-80">
               Dashboard
             </a>
             <a href="/login" className="hover:opacity-80">

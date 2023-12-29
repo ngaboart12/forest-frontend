@@ -17,7 +17,14 @@ const Rabportal = () => {
   const [rejectedFarmer, setRejectedFarmer] = useState([]);
   const [pendingFarmer, setPendingFarmer] = useState([]);
   
-
+  useEffect(() => {
+  
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user || user.role !== 'rab-leader') {
+  
+      navigate('/login'); 
+    }
+  }, [navigate]);
   
   useEffect(() => {
     const fetchFarmers = async () => {
@@ -40,14 +47,7 @@ const Rabportal = () => {
     fetchFarmers();
   }, []);
 
-  useEffect(() => {
-  
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (!user || user.role !== 'rab-leader') {
-  
-      navigate('/login'); 
-    }
-  }, [navigate]);
+
   return (
     <div className="flex flex-row gap-4 w-full">
       {/***Top Cards***/}

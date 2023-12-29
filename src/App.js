@@ -12,7 +12,7 @@ const App = () => {
 
     <>
     
-  <div className="dark">{routing}</div>;
+  <div className="bg-gray-[#F9F9F9]">{routing}</div>;
      <ToastContainer />
   </>
     )
